@@ -16,7 +16,7 @@ jobs:
       - name: Build Docker Image
         run: docker build -t mnojpatidar111/viabhraman-fe .
       - name: Publish image to docker hub
-        run: docker push viabhraman/viabhraman-fe:latest   
+        run: docker push mnojpatidar111/viabhraman-fe:latest   
 
   deploy: 
     needs: build
