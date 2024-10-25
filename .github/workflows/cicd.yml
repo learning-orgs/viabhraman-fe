@@ -27,4 +27,4 @@ jobs:
       - name: Delete Old Container
         run: docker rm -f viabhraman-fe-container
       - name: Run docker container
-        run: docker run -d -p 3000:80 --name viabhraman-fe-container mnojpatidar111/viabhraman-fe   
+        run: docker run -d -p 80:80 --name viabhraman-fe-container mnojpatidar111/viabhraman-fe   
