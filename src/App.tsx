@@ -11,7 +11,7 @@ function App() {
         </p>
       </div>
       <p >
-        Stay tuned with us........
+        Stay tuned with us...............
       </p>
     </>
   )
