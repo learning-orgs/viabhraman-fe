@@ -1,29 +1,22 @@
-# Use an official Node.js runtime as the base image
-FROM node:18-alpine AS build
+FROM node as vite-app
 
-# Set the working directory
-WORKDIR /app
+WORKDIR /app/client
+COPY ./client .
 
-# Copy package.json and package-lock.json to install dependencies
-COPY package*.json ./
+RUN ["npm", "i"]
+RUN ["npm", "run", "build"]
 
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application files
-COPY . .
-
-# Build the Vite app for production
-RUN npm run build
-
-# Use a lightweight web server for serving the static files
 FROM nginx:alpine
 
-# Copy the built files from the build stage to the Nginx HTML directory
-COPY --from=build /app/dist /usr/share/nginx/html
+WORKDIR /usr/share/nginx/
 
-# Expose port 80
+RUN rm -rf html
+RUN mkdir html
+
+WORKDIR /
+
+COPY ./nginx/nginx.conf /etc/nginx
+COPY --from=vite-app ./app/client/dist /usr/share/nginx/html
+
 EXPOSE 80
-
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
