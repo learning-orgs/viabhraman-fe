@@ -1,5 +1,3 @@
-name: CICD
-
 on:
   push:
     branches:
@@ -11,20 +9,24 @@ jobs:
     steps:
       - name: Checkout Source
         uses: actions/checkout@v3
+      - name: Clear Docker Cache
+        run: docker builder prune -f
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Build Docker Image
-        run: docker build -t mnojpatidar111/viabhraman-fe -f Dockerfile.
-      - name: Publish image to docker hub
+        run: docker build --no-cache --platform linux/amd64 -t mnojpatidar111/viabhraman-fe .
+      - name: Publish Image to Docker Hub
         run: docker push mnojpatidar111/viabhraman-fe:latest   
 
   deploy: 
     needs: build
-    runs-on: aws-ec2    
+    runs-on: ubuntu-latest  # aws-ec2 not supported in GitHub Actions; use self-hosted runner for EC2
     steps:
-      - name: Pull image from docker hub
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Pull Image from Docker Hub
         run: docker pull mnojpatidar111/viabhraman-fe:latest 
       - name: Delete Old Container
-        run: docker rm -f viabhraman-fe-container
-      - name: Run docker container
-        run: docker run -d -p 80:80 --name viabhraman-fe-container mnojpatidar111/viabhraman-fe   
+        run: docker rm -f viabhraman-fe-container || true
+      - name: Run Docker Container
+        run: docker run -d -p 80:80 --name viabhraman-fe-container mnojpatidar111/viabhraman-fe
