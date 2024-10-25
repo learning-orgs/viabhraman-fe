@@ -7,7 +7,7 @@ function App() {
       <h1>ViaBhraman</h1>
       <div>
         <p>
-          <strong>We are coming soon to plan your personlized travel  !!! </strong>
+          <strong>We are coming soon to plan your personlized travel  !!!!!!!! </strong>
         </p>
       </div>
       <p >
